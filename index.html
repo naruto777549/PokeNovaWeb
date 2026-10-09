@@ -3,52 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading PokeNova...</title>
+    <title>PokeNova - Initializing</title>
+    
+    <!-- Premium Geometric Font (Montserrat) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <style>
-        body {
+        /* Base Reset */
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Pure Black Background */
+        body {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: #121212;
+            background-color: #000000;
             color: #ffffff;
-            font-family: sans-serif;
+            overflow: hidden;
         }
+
+        /* Logo Styling */
+        .logo {
+            width: 140px; /* Size adjust karne ke liye ise change karein */
+            height: auto;
+            margin-bottom: 25px;
+            border-radius: 50%; /* Agar image ko circle banana ho to ye active rakhein */
+        }
+
+        /* Main Title */
         h1 {
-            color: #f39c12;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+            font-size: 34px;
+            font-weight: 500;
+            letter-spacing: 12px;
+            margin-right: -12px; /* Centers text despite letter-spacing */
+            text-transform: uppercase;
+            margin-bottom: 12px;
         }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #f39c12;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        /* Subtitle */
+        .subtitle {
+            font-size: 9px;
+            font-weight: 400;
+            letter-spacing: 6px;
+            color: #cccccc;
+            text-transform: uppercase;
+            margin-bottom: 80px; /* Text aur bar ke beech ka gap */
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        /* Loading Data Row */
+        .loading-info {
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        p {
-            color: #888;
-            margin-top: 15px;
+
+        /* Progress Bar Container */
+        .progress-track {
+            width: 260px; /* Bar ki length */
+            height: 3px;  /* Bar ki thickness */
+            background-color: #2a2a2a; /* Dark Grey background */
+        }
+
+        /* Progress Bar Red Fill */
+        .progress-fill {
+            height: 100%;
+            width: 1%;
+            background-color: #ff0000; /* Pure Red */
+            transition: width 0.1s linear;
         }
     </style>
 </head>
 <body>
-    <h1>PokeNova Web</h1>
-    <div class="spinner"></div>
-    <p>Syncing with Database...</p>
+
+    <!-- Updated Logo Image Link -->
+    <img src="https://files.catbox.moe/eyegb0.jpg" alt="PokeNova Logo" class="logo">
+    
+    <!-- Texts -->
+    <h1>POKENOVA</h1>
+    <p class="subtitle">Enter the next realm</p>
+    
+    <!-- Loading Percentage -->
+    <div class="loading-info">
+        INITIALIZING SYSTEM &nbsp;•&nbsp; <span id="percent-text">1</span>%
+    </div>
+    
+    <!-- Progress Line -->
+    <div class="progress-track">
+        <div class="progress-fill" id="progress-bar"></div>
+    </div>
 
     <script>
-        // Folder ke andar wale home page par bhejega
-        setTimeout(() => {
-            window.location.href = "pages/home.html";
-        }, 2500);
+        document.addEventListener("DOMContentLoaded", () => {
+            let percent = 1;
+            const percentText = document.getElementById("percent-text");
+            const progressBar = document.getElementById("progress-bar");
+
+            // 1% se 100% tak badhne ki speed (30ms)
+            const loadingInterval = setInterval(() => {
+                percent++;
+                percentText.textContent = percent;
+                progressBar.style.width = percent + "%";
+
+                if (percent >= 100) {
+                    clearInterval(loadingInterval);
+                    
+                    // 100% hone ke aadha second baad redirect
+                    setTimeout(() => {
+                        window.location.href = "pages/home.html";
+                    }, 500); 
+                }
+            }, 30); 
+        });
     </script>
 </body>
 </html>
