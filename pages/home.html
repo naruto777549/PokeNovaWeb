@@ -2,38 +2,165 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokeNova Dashboard</title>
-    <!-- CSS File Link (../statics/ karke link kiya hai) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PokeNova - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../statics/home.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>PokeNova Dashboard</h1>
-            <p>Live Trainer Data & Inventory</p>
-        </header>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
-        <main>
-            <div class="card">
-                <h3>Trainer Stats</h3>
-                <div class="stat-row">
-                    <span>Heavyballs:</span>
-                    <span class="stat-value" id="heavyballs">--</span>
+    <div id="app-content">
+        
+        <!-- Top Header -->
+        <header class="top-nav glass-card">
+            <div class="user-section">
+                <div class="pfp-wrapper">
+                    <img src="https://files.catbox.moe/eyegb0.jpg" alt="Profile" draggable="false">
+                    <div class="online-dot"></div>
                 </div>
-                <div class="stat-row">
-                    <span>Moonballs:</span>
-                    <span class="stat-value" id="moonballs">--</span>
-                </div>
-                <div class="stat-row">
-                    <span>Loveballs:</span>
-                    <span class="stat-value" id="loveballs">--</span>
+                <div class="user-details">
+                    <span class="username" id="tg-name">Shekh Ikrar</span>
+                    <span class="user-status">Trainer Level 100</span>
                 </div>
             </div>
+            <div class="right-header">
+                <div class="nr-box">
+                    <span class="badge-nr">NR</span>
+                    <span id="nr-amount" class="nr-value">20k</span>
+                </div>
+                <button class="premium-menu-btn" onclick="window.location.href='hunt.html'" title="Hunt Arena">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Search & Filter Area -->
+        <div class="search-section">
+            <div class="search-box glass-card">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="searchInput" placeholder="" autocomplete="off">
+                <button id="clearSearch" class="clear-btn" style="display:none;">&times;</button>
+            </div>
+            <button class="filter-btn glass-card" id="filterBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                <span>Filter</span>
+                <span class="filter-badge" id="filterBadge" style="display:none;">1</span>
+            </button>
+        </div>
+
+        <!-- Season Numbers -->
+        <div class="season-nav" id="seasonNav">
+            <button class="season-btn glass-card active" data-target="KANTO">1</button>
+            <button class="season-btn glass-card" data-target="JOHTO">2</button>
+            <button class="season-btn glass-card" data-target="HOENN">3</button>
+            <button class="season-btn glass-card" data-target="SINNOH">4</button>
+            <button class="season-btn glass-card" data-target="UNOVA">5</button>
+            <button class="season-btn glass-card" data-target="KALOS">6</button>
+            <button class="season-btn glass-card" data-target="ALOLA">7</button>
+            <button class="season-btn glass-card" data-target="GALAR">8</button>
+            <button class="season-btn glass-card" data-target="HISUI">9</button>
+            <button class="season-btn glass-card" data-target="PALDEA">10</button>
+        </div>
+
+        <!-- Dynamic Filter Header -->
+        <div id="dynamicHeader" class="region-banner" style="display:none; margin: 10px 15px 20px;">
+            <div class="region-pokeball"></div>
+            <div class="region-info">
+                <h2 id="dynTitle">RESULTS</h2>
+                <p id="dynSubtitle">Showing items</p>
+            </div>
+        </div>
+
+        <!-- No Results State -->
+        <div id="noResults" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding: 60px 20px; text-align:center;">
+            <!-- Broken Pokeball SVG -->
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h8"></path><path d="M14 12h10"></path>
+                <circle cx="12" cy="12" r="2"></circle>
+                <path d="M12 2l-2 5 4 4-2 3"></path> <!-- Crack -->
+            </svg>
+            <h3 style="color:#666; margin-top:15px; font-size:15px; font-weight:600; letter-spacing:1px;">NO RESULT FOUND!</h3>
+        </div>
+
+        <!-- Main Pokedex Area -->
+        <main id="pokedex-container">
+            <!-- Dynamically injected regions -->
         </main>
+        
+        <div style="height: 110px;"></div> 
     </div>
 
-    <!-- JS File Link (../js/ karke link kiya hai) -->
+    <!-- Swipeable Glass Filter Modal -->
+    <div class="filter-modal-overlay" id="filterModal">
+        <div class="filter-modal-content glass-modal" id="modalContent">
+            <div class="drag-handle"></div>
+            <div class="filter-header">
+                <h3>Select Variant</h3>
+                <span class="close-filter" id="closeFilter">&times;</span>
+            </div>
+            <div class="filter-options">
+                <button class="filter-opt glass-card active" data-val="normal">Normal Pokémon</button>
+                <button class="filter-opt glass-card" data-val="shiny">Shiny Pokémon</button>
+                <button class="filter-opt glass-card" data-val="mega">Mega Evolutions</button>
+                <button class="filter-opt glass-card" data-val="gmax">Gigantamax Forms</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Pokemon Details Page (Product View) -->
+    <div id="pokeDetailsModal" class="details-page glass-card" style="display: none;">
+        <div class="details-header">
+            <button class="back-btn" id="closeDetails">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            <span class="details-id" id="det-id">#000</span>
+        </div>
+        
+        <div class="details-body">
+            <!-- 3D Spinning Image Container -->
+            <div class="model-container">
+                <div class="platform-glow"></div>
+                <img id="det-img" src="" class="spin-3d" alt="Pokemon">
+            </div>
+            
+            <h1 class="det-name" id="det-name">Loading...</h1>
+            <div class="det-types" id="det-types"></div>
+            
+            <!-- Details Scrollable Content -->
+            <div class="det-content glass-card">
+                <h3>BASE STATS</h3>
+                <div class="stats-container" id="det-stats">
+                    <!-- JS Injected Stats -->
+                </div>
+                
+                <h3 style="margin-top:25px;">ABOUT</h3>
+                <div class="about-container" id="det-about">
+                    <p>Height: <span id="det-height">--</span> m</p>
+                    <p>Weight: <span id="det-weight">--</span> kg</p>
+                    <p>Abilities: <span id="det-abilities">--</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Glass Bottom Navigation -->
+    <nav class="bottom-bar glass-card">
+        <div class="nav-item active">
+            <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></div>
+            <span>HOME</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='hunt.html'">
+            <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></div>
+            <span>HUNT</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='profile.html'">
+            <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+            <span>PROFILE</span>
+        </div>
+    </nav>
+
     <script src="../js/home.js"></script>
 </body>
 </html>
